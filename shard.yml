@@ -1,0 +1,9 @@
+name: dec
+version: 0.1.0
+
+authors:
+  - name <me@jackharrhy.com>
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
