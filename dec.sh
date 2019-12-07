@@ -1,2 +1,6 @@
 #!/usr/bin/env sh
-cd ./dectalk && wine say.exe -w "../out/$1.wav" "$2" && cd ..
+(
+  cd ./dectalk || exit
+  wine ./say.exe -w "$1.wav" "$2"
+  mv "$1.wav" "../out/$1.wav"
+)
