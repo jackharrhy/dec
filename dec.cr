@@ -17,7 +17,7 @@ get "/:text" do |env|
 
     raise "dec.sh failed" if !process.wait.success?
 
-    send_file env, out_path
+    send_file env, out_path, "audio/wav"
   rescue ex
     puts "request failed: #{ex.message}"
   end
