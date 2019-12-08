@@ -7,17 +7,17 @@ ADD dec.cr shard.lock shard.yml /src/
 RUN shards
 RUN crystal build dec.cr --release --static -o dec
 
-FROM scottyhardy/docker-wine:stable-2.0.1
-
-RUN apt update && apt install xvfb -y
+FROM debian:buster
+RUN dpkg --add-architecture i386
+RUN apt-get update
+RUN apt-get install -y xvfb wine
 
 WORKDIR /app
 COPY --from=crystalbuilder /src/dec /app/dec
 RUN mkdir /app/dectalk
 ADD ./dectalk/ /app/dectalk/
 ADD ./dec.sh /app/dec.sh
+ADD ./start_xvfb.sh /app/start_xvfb.sh
 RUN mkdir /app/out
-
-ENV DISPLAY :0
 
 CMD ["./dec"]

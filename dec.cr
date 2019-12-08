@@ -3,6 +3,9 @@ require "kemal"
 
 r = Random.new
 
+init_xvfb_process = Process.new("./start_xvfb.sh")
+raise "dec.sh failed" if !init_xvfb_process.wait.success?
+
 get "/:text" do |env|
   id = UUID.new(r.random_bytes)
   text = env.params.url["text"]
@@ -12,9 +15,7 @@ get "/:text" do |env|
     process = Process.new("./dec.sh", [id.to_s, text], output: Process::Redirect::Pipe)
     puts process.output.gets_to_end
 
-    if !process.wait.success?
-      raise "dec.sh failed"
-    end
+    raise "dec.sh failed" if !process.wait.success?
 
     send_file env, out_path
   rescue ex
