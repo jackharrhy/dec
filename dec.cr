@@ -8,7 +8,7 @@ raise "dec.sh failed" if !init_xvfb_process.wait.success?
 
 get "/:text" do |env|
   id = UUID.new(r.random_bytes)
-  text = env.params.url["text"]
+  text = "[:phoneme arpabet on]#{env.params.url["text"]}"
   out_path = "./out/#{id}.wav"
 
   begin
