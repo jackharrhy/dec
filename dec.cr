@@ -3,8 +3,10 @@ require "kemal"
 
 r = Random.new
 
-init_xvfb_process = Process.new("./start_xvfb.sh")
-raise "dec.sh failed" if !init_xvfb_process.wait.success?
+if Kemal.config.env != "development"
+  init_xvfb_process = Process.new("./start_xvfb.sh")
+  raise "dec.sh failed" if !init_xvfb_process.wait.success?
+end
 
 get "/:text" do |env|
   id = UUID.new(r.random_bytes)
@@ -27,6 +29,10 @@ get "/:text" do |env|
       file.delete
     end
   end
+end
+
+get "/" do
+  render "views/homepage.ecr"
 end
 
 Kemal.run

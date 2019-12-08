@@ -2,7 +2,9 @@ FROM crystallang/crystal:0.31.1 as crystalbuilder
 
 WORKDIR /src
 
-ADD dec.cr shard.lock shard.yml /src/
+RUN mkdir /src/views
+COPY views/ /src/views
+COPY dec.cr shard.lock shard.yml /src/
 
 RUN shards
 RUN crystal build dec.cr --release --static -o dec
@@ -14,10 +16,12 @@ RUN apt-get install -y xvfb wine
 
 WORKDIR /app
 COPY --from=crystalbuilder /src/dec /app/dec
-RUN mkdir /app/dectalk
-ADD ./dectalk/ /app/dectalk/
-ADD ./dec.sh /app/dec.sh
-ADD ./start_xvfb.sh /app/start_xvfb.sh
+COPY ./dectalk/ /app/dectalk/
+COPY ./views /app/views/
+COPY ./dec.sh /app/dec.sh
+COPY ./start_xvfb.sh /app/start_xvfb.sh
 RUN mkdir /app/out
+
+ENV KEMAL_ENV "production"
 
 CMD ["./dec"]
